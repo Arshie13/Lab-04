@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Active Channel Example</title>
+  <style>
+    .channel {
+      cursor: pointer;
+    }
+
+    #popup-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 150px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: none;
+    }
+
+    #popup-text {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="channel" onclick="setActiveChannel(this)">Channel 1</div>
+  <div class="channel" onclick="setActiveChannel(this)">Channel 2</div>
+  <div class="channel" onclick="setActiveChannel(this)">Channel 3</div>
+  <div id="popup-box" class="hidden">
+    <form>
+      <label for="popup-text">Enter your text:</label>
+      <input type="text" id="popup-text" name="popup-text">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+
+    const popupBox = document.getElementById('popup-box');
+    const popupForm = document.querySelector('#popup-box form');
+
+    function setActiveChannel(channelElement) {
+      console.log('Active Channel:', channelElement.innerText);
+    }
+
+    function showPopup() {
+      popupBox.classList.remove('hidden');
+    }
+
+    function hidePopup() {
+      popupBox.classList.add('hidden');
+    }
+
+    popupForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const popupText = document.getElementById('popup-text').value;
+      console.log('Popup text:', popupText);
+      hidePopup();
+    });
+
+    // Button to trigger popup
+    const showPopupButton = document.createElement('button');
+    showPopupButton.textContent = 'Show Popup';
+    showPopupButton.addEventListener('click', () => {
+      console.log('popup')
+      showPopup()
+      console.log('popup showed')
+    });
+    document.body.appendChild(showPopupButton);
+
+  </script>
+
+</body>
+
+</html>

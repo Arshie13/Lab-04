@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invisicord</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" />
+  <style>
+    body,
+    main {
+      height: 100vh;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .animal-identity {
+      font-size: 2em;
+      color: rgb(82, 82, 82);
+      padding: 2px;
+      border-radius: 50%;
+    }
+
+    main {
+      display: flex;
+    }
+
+    #channels {
+      flex: 1;
+      background-color: lightgrey;
+      padding: 4px;
+    }
+
+    #messages {
+      flex: 4;
+      background-color: white;
+    }
+
+    #input {
+      position: absolute;
+      justify-content: center;
+      bottom: 0;
+      left: 50%;
+      width: 100%;
+      background-color: white;
+      transform: translateY(-100%);
+    }
+
+    .channel {
+      padding: 4px;
+    }
+
+    .channel:hover {
+      background-color: darkgrey;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <nav id="channels"></nav>
+    <div id="messages"></div>
+    <div id="input">
+      <input type="text" style="height: 30px; width: 300px;" id="message_content" placeholder="Input response here">
+      <button onclick="logMessage()">Send</button>
+    </div>
+  </main>
+
+</body>
+<script>
+  const randomAnimals = ['bat',
+    'bee',
+    'bird',
+    'bone',
+    'bug',
+    'butterfly',
+    'cat',
+    'cow',
+    'dog',
+    'dolphin',
+    'donkey',
+    'duck',
+    'elephant',
+    'fish',
+    'google-downasaur',
+    'horse',
+    'jellyfish',
+    'kangaroo',
+    'koala',
+    'owl',
+    'panda',
+    'paw',
+    'penguin',
+    'pig',
+    'rabbit',
+    'rodent',
+    'shark',
+    'sheep',
+    'snail',
+    'snake',
+    'spider',
+    'tortoise',
+    'turkey',
+    'turtle',
+    'unicorn'
+  ];
+  const randomColor = [
+    'AliceBlue',
+    'AntiqueWhite',
+    'Aqua',
+    'Aquamarine',
+    'Azure',
+    'Beige',
+    'Bisque',
+    'Black',
+    'BlanchedAlmond',
+    'Blue',
+    'BlueViolet',
+    'Brown',
+    'BurlyWood',
+    'CadetBlue',
+    'Chartreuse',
+    'Chocolate',
+    'Coral',
+    'CornflowerBlue',
+    'Cornsilk',
+    'Crimson',
+    'Cyan',
+    'DarkBlue',
+    'DarkCyan',
+    'DarkGoldenRod',
+    'DarkGray',
+    'DarkGrey',
+    'DarkGreen',
+    'DarkKhaki',
+    'DarkMagenta',
+    'DarkOliveGreen',
+    'DarkOrange',
+    'DarkOrchid',
+    'DarkRed',
+    'DarkSalmon',
+    'DarkSeaGreen',
+    'DarkSlateBlue',
+    'DarkSlateGray',
+    'DarkSlateGrey',
+    'DarkTurquoise',
+    'DarkViolet',
+    'DeepPink',
+    'DeepSkyBlue',
+    'DimGray',
+    'DimGrey',
+    'DodgerBlue',
+    'FireBrick',
+    'FloralWhite',
+    'ForestGreen',
+    'Fuchsia',
+    'Gainsboro',
+    'GhostWhite',
+    'Gold',
+    'GoldenRod',
+    'Gray',
+    'Grey',
+    'Green',
+    'GreenYellow',
+    'HoneyDew',
+    'HotPink',
+    'IndianRed',
+    'Indigo',
+    'Ivory',
+    'Khaki',
+    'Lavender',
+    'LavenderBlush',
+    'LawnGreen',
+    'LemonChiffon',
+    'LightBlue',
+    'LightCoral',
+    'LightCyan',
+    'LightGoldenRodYellow',
+    'LightGray',
+    'LightGrey',
+    'LightGreen',
+    'LightPink',
+    'LightSalmon',
+    'LightSeaGreen',
+    'LightSkyBlue',
+    'LightSlateGray',
+    'LightSlateGrey',
+    'LightSteelBlue',
+    'LightYellow',
+    'Lime',
+    'LimeGreen',
+    'Linen',
+    'Magenta',
+    'Maroon',
+    'MediumAquaMarine',
+    'MediumBlue',
+    'MediumOrchid',
+    'MediumPurple',
+    'MediumSeaGreen',
+    'MediumSlateBlue',
+    'MediumSpringGreen',
+    'MediumTurquoise',
+    'MediumVioletRed',
+    'MidnightBlue',
+    'MintCream',
+    'MistyRose',
+    'Moccasin',
+    'NavajoWhite',
+    'Navy',
+    'OldLace',
+    'Olive',
+    'OliveDrab',
+    'Orange',
+    'OrangeRed',
+    'Orchid',
+    'PaleGoldenRod',
+    'PaleGreen',
+    'PaleTurquoise',
+    'PaleVioletRed',
+    'PapayaWhip',
+    'PeachPuff',
+    'Peru',
+    'Pink',
+    'Plum',
+    'PowderBlue',
+    'Purple',
+    'RebeccaPurple',
+    'Red',
+    'RosyBrown',
+    'RoyalBlue',
+    'SaddleBrown',
+    'Salmon',
+    'SandyBrown',
+    'SeaGreen',
+    'SeaShell',
+    'Sienna',
+    'Silver',
+    'SkyBlue',
+    'SlateBlue',
+    'SlateGray',
+    'SlateGrey',
+    'Snow',
+    'SpringGreen',
+    'SteelBlue',
+    'Tan',
+    'Teal',
+    'Thistle',
+    'Tomato',
+    'Turquoise',
+    'Violet',
+    'Wheat',
+    'White',
+    'WhiteSmoke',
+    'Yellow',
+    'YellowGreen'
+  ];
+
+  let activeChannel = null;
+
+  function setActiveChannel(channel) {
+    activeChannel = channel
+  }
+
+  async function deleteMessage(id, channelName) {
+    const animal_identity = localStorage.getItem('invisicord.animal');
+    const color_identity = localStorage.getItem('invisicord.color');
+    console.log(id)
+    try {
+      const response = await fetch(`/messages/${channelName}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          animal_identity,
+          color_identity,
+          id
+        }),
+      });
+
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete message (status ${response.status})`);
+      }
+
+      console.log('Message deleted successfully');
+
+      // Now fetch messages
+      await fetchMessages(channelName);
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  }
+
+
+  async function logMessage() {
+    const messageContent = document.getElementById('message_content')
+    if (!activeChannel) {
+      console.error('no channel selected')
+    }
+    await sendMessage(activeChannel, messageContent.value)
+    messageContent.value = '';
+  }
+
+  async function sendMessage(channelName, messageContent) {
+    let animal_identity = localStorage.getItem('invisicord.animal');
+    let color_identity = localStorage.getItem('invisicord.color')
+    const response = await fetch(`/messages/${channelName}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message_content: messageContent,
+        animal_identity: animal_identity,
+        color_identity: color_identity
+      })
+    })
+    await fetchMessages(channelName)
+  }
+
+  async function fetchChannels() {
+    const response = await fetch('/channels');
+    const channels = await response.json();
+    const channelsDiv = document.getElementById('channels');
+    let innerHtml = '';
+
+    console.log('debugging channels: ', channels);
+
+    for (const channel of channels) {
+
+      innerHtml += /*html*/`
+        <div 
+        class="channel" 
+        title="${channel.purpose}" 
+        onclick="fetchMessages('${channel.name}')"
+        >
+          • ${channel.name}
+        </div>
+      `;
+    }
+    channelsDiv.innerHTML = innerHtml;
+  }
+
+  async function fetchMessages(channelName) {
+    const response = await fetch(`/messages/${channelName}`);
+    const messages = await response.json();
+    const messageDiv = document.getElementById('messages')
+    let innerHtml = ''
+
+    setActiveChannel(channelName)
+
+    for (const message of messages) {
+      message
+      innerHtml += /*html*/`
+        <div class="message">
+          <span id="anonymous_identity"
+            class="mdi mdi-${message.animal_identity} animal-identity"
+            style="background-color: ${message.color_identity}"
+          ></span>
+          <small>Anonymous ${message.color_identity} ${message.animal_identity}</small>
+          <br>
+          ${message.content}
+          <div class="mdi mdi-delete" onclick="deleteMessage(${message.id}, '${channelName}')">Delete</div>
+        </div>
+      `;
+    }
+    messageDiv.innerHTML = innerHtml;
+  }
+
+  function randomItem(array) {
+    return array[Math.trunc(Math.random() * array.length)];
+  }
+
+  window.onload = () => {
+    const animalIdentity = localStorage.getItem('invisicord.animal');
+    const colorIdentity = localStorage.getItem('invisicord.color');
+    if (!animalIdentity && !colorIdentity) {
+      localStorage.setItem('invisicord.animal', randomItem(randomAnimals));
+      localStorage.setItem('invisicord.color', randomItem(randomColor));
+    }
+    fetchChannels();
+  };
+</script>
+
+</html>
